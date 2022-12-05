@@ -35,6 +35,7 @@ def append_string_if_no_value(row: pd.Series, appending_value: str, column_numbe
 
 def mark_rows_with_values(df: pd.DataFrame, column_number: int = 8) -> pd.DataFrame:
     test = df.apply(axis='columns', func=lambda x: has_appending_value(x.iloc[column_number]))
+    
     df['has_value'] = test
     return df
 
@@ -55,8 +56,8 @@ def has_appending_value(string: str) -> bool:
 
 
 def add_adjacent_value_columns(df: pd.DataFrame) -> pd.DataFrame:
-    previous_column = [df.shape[0]]
-    next_column = [df.shape[0]]
+    previous_column = []
+    next_column = []
     previous_value = (0, 0)
     next_value = (0, 0)
 
@@ -66,7 +67,6 @@ def add_adjacent_value_columns(df: pd.DataFrame) -> pd.DataFrame:
         if has_appending_value(row.iloc[9]):
             previous_value = (int(row.iloc[1]), int(get_position_value(row)))
         previous_column.append(previous_value)
-
         reverse_index = length - (index + 1)
         reverse_row = df.iloc[reverse_index]
         if has_appending_value(reverse_row.iloc[9]):
@@ -74,7 +74,7 @@ def add_adjacent_value_columns(df: pd.DataFrame) -> pd.DataFrame:
         next_column.append(next_value)
 
     df['previous_value'] = pd.Series(previous_column)
-    df['next_value'] = pd.Series(next_column)
+    df['next_value'] = pd.Series(next_column[::-1])
     return df
 
 
