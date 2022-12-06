@@ -6,8 +6,8 @@ import os
 def read_args():
     parser = argparse.ArgumentParser()
     parser.add_argument('file_path')
-    parser.add_argument('-f', '--result_file_name', default="joined", required=False, help="The name of the resulting file, will have the same extension as the input files")
-    parser.add_argument('-s', '--column_separator', default=None, required=False)
+    parser.add_argument('-f', '--result_file_name', default="results", required=False, help="The name of the resulting file")
+    parser.add_argument('-s', '--column_separator', default='\t', required=False)
     args=parser.parse_args()
     return args
 
@@ -105,7 +105,7 @@ def main() -> None:
     df = add_adjacent_value_columns(df)
     df = finally_append_values(df)
     df.drop(columns=['has_value', 'previous_value', 'next_value'], inplace=True)
-    write_file(df, result_file_name, '\t')
+    write_file(df, result_file_name, column_separator)
 
 
 if __name__ == "__main__":
